@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+  "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<library name="DynamicAny" dirname="dynamic_any" xmlns:xi="http://www.w3.org/2001/XInclude" 
+         id="dynamic_any" last-revision="$Date: 2009-07-26 16:11:03 -0400 (Sun, 26 Jul 2009) $">
+  <libraryinfo>
+    <author>
+      <firstname>Daniel</firstname>
+      <surname>Larimer</surname>
+    </author>
+
+    <copyright>
+      <year>2011</year>
+      <holder>Daniel Larimer</holder>
+    </copyright>
+
+    <librarypurpose>
+      Safe, generic container for single values of different value types with support for dynamic casts.
+    </librarypurpose> 
+    <librarycategory name="category:data-structures"/>
+
+    <legalnotice>
+      <para>Distributed under the Boost Software License, Version 1.0.
+      (See accompanying file <filename>LICENSE_1_0.txt</filename> or copy at 
+      <ulink
+      url="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</ulink>)
+      </para>
+    </legalnotice>
+  </libraryinfo>
+
+  <title>Boost.DynamicAny</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>Boost.DynamicAny is a vairant on Boost.Any which provides more flexible
+          dynamic casting of the underlying type.  Whereas retreiving a value from
+          Boost.Any requires that you know the exact type stored within the Any,
+          Boost.DynamicAny allows you to <emphasis>dynamically cast</emphasis> to either a base or
+          derived class of the held type. </para>
+
+    <para>Boost.DynamicAny passes all of the same unit tests as Boost.Any, but additionally supports
+          the following test:
+    </para>
+
+<programlisting name="dynamic_any.example.first">
+#include &lt;list&gt;
+#include &lt;boost/dynamic_any.hpp&gt;
+
+using <functionname>boost::dynamic_any_cast</functionname>;
+
+#include &lt;boost/dynamic_any.hpp&gt;
+    struct base 
+    {
+        int a;
+    };
+
+    struct base1 
+    {
+        int a1;
+    };
+
+    struct derived : base, base1
+    {
+        int b;
+    };
+
+    struct other {};
+
+    void test_dynamic_cast()
+    {
+        derived d;
+        dynamic_any a(d);
+        derived &                ra  = dynamic_any_cast<derived&>(a);
+        base &                   b   = dynamic_any_cast<base&>(a);
+        base1 &                  b1  = dynamic_any_cast<base1&>(a);
+        const base1 &            cb1 = dynamic_any_cast<const base1&>(a);
+    
+        TEST_CHECK_THROW(
+            dynamic_any_cast<other&>(a),
+            bad_dynamic_any_cast,
+            "dynamic_any_cast to incorrect reference type");
+    }
+
+</programlisting>
+  </section>
+</library>
