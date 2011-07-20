@@ -3,6 +3,7 @@
 #include <typeinfo>
 #include <new>
 #include <string.h>
+#include <boost/throw_exception.hpp>
 
 namespace boost {
 
@@ -40,6 +41,15 @@ namespace detail {
    } // namespace any_ref
 } // namespace detail
 
+    class bad_any_ref_cast : public std::bad_cast
+    {
+    public:
+        virtual const char * what() const throw() {
+            return "boost::bad_any_ref_cast: "
+                   "failed conversion using boost::any_ref";
+        }
+    };
+
 /**
     @brief stack based implementation of boost::any that works for const reference types.
 
@@ -68,7 +78,10 @@ class any_ref
 
         template<typename T>
         inline operator const T&()const {
-            return dynamic_cast<detail::any_ref::place_holder_impl<const T&>* >((detail::any_ref::place_holder*)held)->m_ref;
+            const T* v = const_ptr<T>();
+            if( !v )
+                boost::throw_exception(bad_any_ref_cast());
+            return *v;
         }
         template<typename T>
         inline const T* const_ptr()const {
@@ -81,7 +94,10 @@ class any_ref
 
         template<typename T>
         inline operator T&()const {
-            return const_cast<T&>(dynamic_cast<detail::any_ref::place_holder_impl<T&>* >((detail::any_ref::place_holder*)held)->m_ref);
+            T* v = ptr<T>();
+            if( !v )
+                boost::throw_exception(bad_any_ref_cast());
+            return *v;
         }
         template<typename T>
         inline T* ptr()const {

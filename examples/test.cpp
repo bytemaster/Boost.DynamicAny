@@ -2,6 +2,7 @@
 #include <iostream>
 
 void times2( double& v ) { v*=2; }
+void print( const double& v ) { std::cerr<<v<<std::endl; }
 
 int main( int argc, char** agv )
 {
@@ -37,6 +38,11 @@ int main( int argc, char** agv )
 
     times2(r);
     std::cerr<<"t: "<<t<<std::endl;
+    print(r);
+
+    const double cd = 22;
+    boost::any_ref cr = cd;
+    times2(cr);
 
     intptr i = &five;
     intptr& ir = i;

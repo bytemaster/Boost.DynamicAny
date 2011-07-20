@@ -1,4 +1,4 @@
-Boost.DynamicAny - Remote Procedure Call library
+Boost.DynamicAny 
 ---------------------------------------
 Boost.DynamicAny is a vairant on Boost.Any which provides more flexible
 dynamic casting of the underlying type.  Whereas retreiving a value from
@@ -44,6 +44,38 @@ the following test:
             bad_dynamic_any_cast,
             "dynamic_any_cast to incorrect reference type");
     }
+
+
+### boost::any_ref ###
+
+The boost::any_ref class provides a generic reference that automatically casts to reference
+types.  You can also get a pointer to the object and have it return NULL if the type is wrong.
+
+    #include <boost/any_ref.hpp>
+
+    using boost::any_ref;
+
+    void times2( double& v ) { v*=2; }
+    void print( const double& v ) { std::cerr<<v<<std::endl; }
+
+    void test() {
+        double          x = 5.5;
+        any_ref         r = x;
+        times2( r );
+        print(r);
+
+
+        const double cx = 22;
+        any_ref         cr = x;
+        print(cr); // OK
+        times2(cr);
+        TEST_CHECK_THROW(
+            times2(cr),
+            bad_any_ref_cast,
+            "any_ref_cast to incorrect reference type");
+    }
+
+    BOOST_ASSERT( x == 11 );
 
 
 ### Notice ###
