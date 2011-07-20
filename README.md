@@ -51,6 +51,9 @@ the following test:
 The boost::any_ref class provides a generic reference that automatically casts to reference
 types.  You can also get a pointer to the object and have it return NULL if the type is wrong.
 
+This class is supposed to be a type-safe alternative to void*, typesafety comes at the cost of
+dynamic_cast<>. 
+
     #include <boost/any_ref.hpp>
 
     using boost::any_ref;
@@ -61,21 +64,21 @@ types.  You can also get a pointer to the object and have it return NULL if the 
     void test() {
         double          x = 5.5;
         any_ref         r = x;
-        times2( r );
+        times2(r);
         print(r);
-
+        BOOST_ASSERT( x == 11 );
 
         const double cx = 22;
-        any_ref         cr = x;
+        any_ref      cr = x;
         print(cr); // OK
-        times2(cr);
+
+        // cannot cast from const double& to double&
         TEST_CHECK_THROW(
             times2(cr),
             bad_any_ref_cast,
             "any_ref_cast to incorrect reference type");
     }
 
-    BOOST_ASSERT( x == 11 );
 
 
 ### Notice ###
