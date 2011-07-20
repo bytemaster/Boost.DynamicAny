@@ -3,8 +3,8 @@ Boost.DynamicAny - Remote Procedure Call library
 Boost.DynamicAny is a vairant on Boost.Any which provides more flexible
 dynamic casting of the underlying type.  Whereas retreiving a value from
 Boost.Any requires that you know the exact type stored within the Any,
-Boost.DynamicAny allows you to *dynamically cast* to either a base or
-derived class of the held type. 
+Boost.DynamicAny allows you to *dynamically cast* to either any base of 
+the held type. 
 
 
 Boost.DynamicAny passes all of the same unit tests as Boost.Any, but additionally supports
